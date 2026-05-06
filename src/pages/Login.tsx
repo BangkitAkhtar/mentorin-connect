@@ -9,18 +9,47 @@ import { toast } from "sonner";
 import { GraduationCap, ShieldCheck, Users } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
+import { authAPI } from "@/lib/api";
+
 export default function Login() {
   const nav = useNavigate();
-  const { login } = useApp();
   const [role, setRole] = useState<"mahasiswa" | "tutor" | "admin">("mahasiswa");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const ok = login(email.trim(), role);
-    if (!ok) { toast.error("Email tidak ditemukan", { description: "Demo: demo@binus.ac.id (mhs) · aulia@binus.ac.id (tutor) · admin@binus.ac.id (admin)" }); return; }
+    setIsLoading(true);
+    
+    // Call the real backend API
+    const response = await authAPI.login(email.trim(), password);
+    
+    setIsLoading(false);
+
+    if (!response.success) { 
+      toast.error("Gagal Login", { description: response.message || "Email atau password salah" }); 
+      return; 
+    }
+    
+    // Format user agar cocok dengan struktur AppContext
+    const loggedUser = {
+      id: String(response.user.id),
+      role: role, // menggunakan role dari pilihan tab
+      name: response.user.name,
+      email: response.user.email,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(response.user.name)}`,
+      university: "BINUS University"
+    };
+
+    localStorage.setItem("mentorin_user_v1", JSON.stringify(loggedUser));
+    
     toast.success("Berhasil masuk!");
-    nav("/app");
+    
+    // Gunakan window.location agar AppContext mereload user dari localstorage
+    setTimeout(() => {
+      window.location.href = "/app";
+    }, 500);
   };
 
   return (
@@ -56,9 +85,12 @@ export default function Login() {
                 </div>
                 <div>
                   <Label htmlFor="pwd">Password</Label>
-                  <Input id="pwd" type="password" placeholder="••••••••" defaultValue="demo1234" />
+                  <Input id="pwd" type="password" placeholder="••••••••" 
+                    value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
-                <Button type="submit" className="w-full hover-scale">Masuk</Button>
+                <Button type="submit" disabled={isLoading} className="w-full hover-scale">
+                  {isLoading ? "Memproses..." : "Masuk"}
+                </Button>
               </form>
 
               <div className="mt-4 rounded-lg bg-muted/60 p-3 text-xs text-muted-foreground">

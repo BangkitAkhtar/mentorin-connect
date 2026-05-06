@@ -40,6 +40,9 @@ export interface ClassItem {
   capacity: number;
   enrolled: string[]; // mahasiswa ids
   active: boolean;
+  completed?: boolean;
+  meetingLink?: string;
+  materials?: string;
 }
 
 export type BookingStatus = "Pending" | "Confirmed" | "Ongoing" | "Completed" | "Cancelled";
@@ -55,6 +58,7 @@ export interface Booking {
   status: BookingStatus;
   createdAt: number;
   reviewed?: boolean;
+  classId?: string; // If this booking belongs to a class
 }
 
 export interface Review {
@@ -67,12 +71,20 @@ export interface Review {
   createdAt: number;
 }
 
+export interface MessageAttachment {
+  name: string;
+  url: string;       // object URL or data URL
+  type: string;      // MIME type
+  size: number;      // bytes
+}
+
 export interface Message {
   id: string;
-  threadId: string; // `${mahasiswaId}_${tutorId}`
+  threadId: string; // `${mahasiswaId}_${tutorId}` or `class_${classId}`
   senderId: string;
   text: string;
   createdAt: number;
+  attachment?: MessageAttachment;
 }
 
 export interface ProposedClass {

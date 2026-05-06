@@ -17,6 +17,8 @@ import { Footer } from "@/components/Footer";
 
 const mahasiswaNav = [
   { to: "/app", label: "Beranda", icon: LayoutDashboard, end: true },
+  { to: "/app/profil-mahasiswa", label: "Kelola Profil", icon: UserRound },
+  { to: "/app/kelas-mahasiswa", label: "Kelas Saya", icon: GraduationCap },
   { to: "/app/katalog", label: "Katalog Kelas", icon: BookOpen },
   { to: "/app/tutor", label: "Daftar Tutor", icon: Users },
   { to: "/app/usulan", label: "Saran Kelas", icon: Lightbulb },
@@ -37,8 +39,7 @@ const tutorNav = [
 
 const adminNav = [
   { to: "/app", label: "Beranda", icon: LayoutDashboard, end: true },
-  { to: "/app/admin/mahasiswa", label: "Mahasiswa", icon: Users },
-  { to: "/app/admin/tutor", label: "Tutor", icon: GraduationCap },
+  { to: "/app/admin/users", label: "Kelola Akun", icon: Users },
   { to: "/app/admin/aplikasi-tutor", label: "Aplikasi Tutor", icon: UserPlus },
   { to: "/app/admin/kelas", label: "Kelas", icon: BookOpen },
   { to: "/app/admin/booking", label: "Booking", icon: ClipboardList },

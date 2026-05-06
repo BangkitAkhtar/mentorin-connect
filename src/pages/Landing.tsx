@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
@@ -24,7 +25,7 @@ export default function Landing() {
         <div className="container flex h-16 items-center justify-between">
           <Link to="/"><Logo /></Link>
           <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <a href="#fitur" className="story-link text-muted-foreground transition-colors hover:text-foreground">Fitur</a>
+            <a href="/" className="story-link text-muted-foreground transition-colors hover:text-foreground">Beranda</a>
             <a href="#cara" className="story-link text-muted-foreground transition-colors hover:text-foreground">Cara Kerja</a>
             <a href="#tutor" className="story-link text-muted-foreground transition-colors hover:text-foreground">Tutor</a>
           </nav>
@@ -116,7 +117,14 @@ export default function Landing() {
       </section>
 
       {/* Fitur */}
-      <section id="fitur" className="container py-20">
+      <motion.section
+        id="fitur"
+        className="container py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-3xl font-bold md:text-4xl">Kenapa MentorIn?</h2>
           <p className="mt-3 text-muted-foreground">Dirancang untuk kebutuhan belajar mahasiswa yang fleksibel dan kolaboratif.</p>
@@ -137,10 +145,17 @@ export default function Landing() {
             </div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Katalog Kelas - Auto Marquee */}
-      <section id="katalog" className="border-y bg-muted/30 py-20">
+      <motion.section
+        id="katalog"
+        className="border-y bg-muted/30 py-20"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-xs font-semibold text-primary">
@@ -200,10 +215,17 @@ export default function Landing() {
             </Button>
           </Link>
         </div>
-      </section>
+      </motion.section>
 
       {/* Cara kerja */}
-      <section id="cara" className="bg-muted/40 py-20">
+      <motion.section
+        id="cara"
+        className="bg-muted/40 py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold md:text-4xl">Cara Kerja</h2>
@@ -225,10 +247,17 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Tutor */}
-      <section id="tutor" className="container py-20">
+      <motion.section
+        id="tutor"
+        className="container py-20"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="flex items-end justify-between">
           <div>
             <h2 className="font-display text-3xl font-bold md:text-4xl">Tutor unggulan</h2>
@@ -257,10 +286,17 @@ export default function Landing() {
             </div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Testimoni - Auto Marquee */}
-      <section id="testimoni" className="bg-muted/40 py-20">
+      <motion.section
+        id="testimoni"
+        className="bg-muted/40 py-20"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-xs font-semibold text-accent">
@@ -304,10 +340,16 @@ export default function Landing() {
             })}
           </AutoMarquee>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA */}
-      <section className="container pb-20">
+      <motion.section
+        className="container pb-20"
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="overflow-hidden rounded-3xl bg-gradient-primary p-10 text-center text-primary-foreground shadow-elevated md:p-16">
           <h2 className="mx-auto max-w-2xl font-display text-3xl font-bold md:text-4xl">Siap meningkatkan IPK kamu semester ini?</h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">Gabung MentorIn dan akses bimbingan dari ratusan tutor mahasiswa BINUS.</p>
@@ -320,7 +362,7 @@ export default function Landing() {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <Footer />
     </div>

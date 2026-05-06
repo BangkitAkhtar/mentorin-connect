@@ -46,7 +46,7 @@ export function Footer() {
 
         <div className="mt-6 flex flex-col items-center justify-between gap-2 border-t pt-6 text-xs text-muted-foreground md:flex-row">
           <p>© {new Date().getFullYear()} MentorIn — Kelompok 8 SASC BINUS. Untuk keperluan pembelajaran.</p>
-          <p>Dibuat dengan ❤ untuk mahasiswa Indonesia.</p>
+          <p>Dibuat dengan ❤ untuk Binusian.</p>
         </div>
       </div>
     </footer>

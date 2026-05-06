@@ -22,6 +22,8 @@ import TutorProfile from "./pages/app/mahasiswa/TutorProfile";
 import Booking from "./pages/app/mahasiswa/Booking";
 import Riwayat from "./pages/app/mahasiswa/Riwayat";
 import Usulan from "./pages/app/mahasiswa/Usulan";
+import MahasiswaProfil from "./pages/app/mahasiswa/Profil";
+import KelasSayaMahasiswa from "./pages/app/mahasiswa/KelasSaya";
 
 import Profil from "./pages/app/tutor/Profil";
 import Jadwal from "./pages/app/tutor/Jadwal";
@@ -30,15 +32,68 @@ import BookingMasuk from "./pages/app/tutor/BookingMasuk";
 import UsulanTutor from "./pages/app/tutor/UsulanTutor";
 import RiwayatTutor from "./pages/app/tutor/RiwayatTutor";
 
-import AdminMahasiswa from "./pages/app/admin/Mahasiswa";
-import AdminTutor from "./pages/app/admin/Tutor";
+import AdminUsers from "./pages/app/admin/Users";
 import AdminKelas from "./pages/app/admin/Kelas";
 import AdminBooking from "./pages/app/admin/Booking";
 import AdminUsulan from "./pages/app/admin/Usulan";
 import AdminReview from "./pages/app/admin/Review";
 import AdminAplikasiTutor from "./pages/app/admin/AplikasiTutor";
 
+import { useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import { PageTransition } from "@/components/PageTransition";
+
 const queryClient = new QueryClient();
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+        <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
+        <Route path="/apply-tutor" element={<PageTransition><ApplyTutor /></PageTransition>} />
+        <Route path="/apply-tutor/sukses" element={<PageTransition><ApplyTutorSuccess /></PageTransition>} />
+
+        <Route path="/app" element={<DashboardLayout />}>
+          <Route index element={<PageTransition><Home /></PageTransition>} />
+          <Route path="chat" element={<PageTransition><Chat /></PageTransition>} />
+          <Route path="chat/:threadId" element={<PageTransition><Chat /></PageTransition>} />
+
+          {/* Mahasiswa */}
+          <Route path="profil-mahasiswa" element={<PageTransition><MahasiswaProfil /></PageTransition>} />
+          <Route path="kelas-mahasiswa" element={<PageTransition><KelasSayaMahasiswa /></PageTransition>} />
+          <Route path="katalog" element={<PageTransition><Katalog /></PageTransition>} />
+          <Route path="tutor" element={<PageTransition><TutorList /></PageTransition>} />
+          <Route path="tutor/:id" element={<PageTransition><TutorProfile /></PageTransition>} />
+          <Route path="booking/:tutorId" element={<PageTransition><Booking /></PageTransition>} />
+          <Route path="riwayat" element={<PageTransition><Riwayat /></PageTransition>} />
+          <Route path="usulan" element={<PageTransition><Usulan /></PageTransition>} />
+
+          {/* Tutor */}
+          <Route path="profil" element={<PageTransition><Profil /></PageTransition>} />
+          <Route path="jadwal" element={<PageTransition><Jadwal /></PageTransition>} />
+          <Route path="kelas-saya" element={<PageTransition><KelasSaya /></PageTransition>} />
+          <Route path="booking-masuk" element={<PageTransition><BookingMasuk /></PageTransition>} />
+          <Route path="usulan-tutor" element={<PageTransition><UsulanTutor /></PageTransition>} />
+          <Route path="riwayat-tutor" element={<PageTransition><RiwayatTutor /></PageTransition>} />
+
+          {/* Admin */}
+          <Route path="admin/users" element={<PageTransition><AdminUsers /></PageTransition>} />
+          <Route path="admin/kelas" element={<PageTransition><AdminKelas /></PageTransition>} />
+          <Route path="admin/booking" element={<PageTransition><AdminBooking /></PageTransition>} />
+          <Route path="admin/usulan" element={<PageTransition><AdminUsulan /></PageTransition>} />
+          <Route path="admin/review" element={<PageTransition><AdminReview /></PageTransition>} />
+          <Route path="admin/aplikasi-tutor" element={<PageTransition><AdminAplikasiTutor /></PageTransition>} />
+        </Route>
+
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -47,45 +102,7 @@ const App = () => (
       <Sonner />
       <AppProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/apply-tutor" element={<ApplyTutor />} />
-            <Route path="/apply-tutor/sukses" element={<ApplyTutorSuccess />} />
-
-            <Route path="/app" element={<DashboardLayout />}>
-              <Route index element={<Home />} />
-              <Route path="chat" element={<Chat />} />
-
-              {/* Mahasiswa */}
-              <Route path="katalog" element={<Katalog />} />
-              <Route path="tutor" element={<TutorList />} />
-              <Route path="tutor/:id" element={<TutorProfile />} />
-              <Route path="booking/:tutorId" element={<Booking />} />
-              <Route path="riwayat" element={<Riwayat />} />
-              <Route path="usulan" element={<Usulan />} />
-
-              {/* Tutor */}
-              <Route path="profil" element={<Profil />} />
-              <Route path="jadwal" element={<Jadwal />} />
-              <Route path="kelas-saya" element={<KelasSaya />} />
-              <Route path="booking-masuk" element={<BookingMasuk />} />
-              <Route path="usulan-tutor" element={<UsulanTutor />} />
-              <Route path="riwayat-tutor" element={<RiwayatTutor />} />
-
-              {/* Admin */}
-              <Route path="admin/mahasiswa" element={<AdminMahasiswa />} />
-              <Route path="admin/tutor" element={<AdminTutor />} />
-              <Route path="admin/kelas" element={<AdminKelas />} />
-              <Route path="admin/booking" element={<AdminBooking />} />
-              <Route path="admin/usulan" element={<AdminUsulan />} />
-              <Route path="admin/review" element={<AdminReview />} />
-              <Route path="admin/aplikasi-tutor" element={<AdminAplikasiTutor />} />
-            </Route>
-
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AnimatedRoutes />
         </BrowserRouter>
       </AppProvider>
     </TooltipProvider>

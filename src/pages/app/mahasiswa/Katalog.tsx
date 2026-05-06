@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { PageHeader } from "@/components/PageHeader";
 import { Input } from "@/components/ui/input";
@@ -10,23 +10,51 @@ import { Search, Calendar, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/EmptyState";
+import { usersAPI } from "@/lib/api";
 
 export default function Katalog() {
-  const { classes, tutors, currentUser, enrollClass } = useApp();
+  const { classes, tutors, currentUser, enrollClass, bookings } = useApp();
   const [q, setQ] = useState("");
   const [subject, setSubject] = useState("all");
   const [day, setDay] = useState("all");
   const [minRating, setMinRating] = useState("all");
+  
+  const [realTutors, setRealTutors] = useState<any[]>([]);
+
+  useEffect(() => {
+    usersAPI.getAll().then(users => {
+      // Map database users to a format compatible with TutorProfile
+      const mapped = users.map((u: any) => ({
+        id: String(u.id),
+        name: u.name,
+        avatar: u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`,
+        rating: 0,
+        role: u.role
+      }));
+      setRealTutors(mapped.filter((u: any) => u.role === 'tutor'));
+    });
+  }, []);
+
+  // Merge real tutors from DB with mock tutors so new classes work
+  const allTutors = useMemo(() => {
+    const combined = [...tutors];
+    realTutors.forEach(rt => {
+      if (!combined.find(t => t.id === rt.id)) {
+        combined.push(rt as any);
+      }
+    });
+    return combined;
+  }, [tutors, realTutors]);
 
   const filtered = useMemo(() => classes.filter(c => {
     if (!c.active) return false;
-    const tutor = tutors.find(t => t.id === c.tutorId);
+    const tutor = allTutors.find(t => t.id === c.tutorId);
     if (q && !`${c.title} ${c.subject} ${tutor?.name}`.toLowerCase().includes(q.toLowerCase())) return false;
     if (subject !== "all" && c.subject !== subject) return false;
     if (day !== "all" && c.day !== day) return false;
     if (minRating !== "all" && (tutor?.rating || 0) < Number(minRating)) return false;
     return true;
-  }), [classes, tutors, q, subject, day, minRating]);
+  }), [classes, allTutors, q, subject, day, minRating]);
 
   return (
     <div className="space-y-6">
@@ -68,9 +96,13 @@ export default function Katalog() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map(c => {
-            const tutor = tutors.find(t => t.id === c.tutorId)!;
+            const tutor = allTutors.find(t => t.id === c.tutorId) || { id: c.tutorId, name: "Tutor Tidak Ditemukan", avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=Unknown`, rating: 0 };
             const sisa = c.capacity - c.enrolled.length;
-            const enrolled = currentUser ? c.enrolled.includes(currentUser.id) : false;
+            const userBooking = bookings.find(b => b.classId === c.id && b.mahasiswaId === currentUser?.id);
+            const isPending = userBooking?.status === "Pending";
+            const isConfirmed = userBooking?.status === "Confirmed" || userBooking?.status === "Completed";
+            const hasApplied = isPending || isConfirmed || (currentUser ? c.enrolled.includes(currentUser.id) : false);
+
             return (
               <div key={c.id} className="group flex animate-fade-in flex-col rounded-2xl border bg-card p-5 shadow-card hover-lift">
                 <div className="flex items-start justify-between">
@@ -95,11 +127,15 @@ export default function Katalog() {
                 </div>
 
                 <Button
-                  className="mt-5"
-                  disabled={enrolled || sisa === 0}
-                  onClick={() => { enrollClass(c.id, currentUser!.id); toast.success("Berhasil daftar kelas!"); }}
+                  className={`mt-5 ${isPending ? "bg-amber-500 hover:bg-amber-500 text-white" : isConfirmed ? "bg-emerald-600 hover:bg-emerald-600 text-white" : ""}`}
+                  variant={hasApplied ? "secondary" : "default"}
+                  disabled={hasApplied || sisa === 0}
+                  onClick={async () => { 
+                    await enrollClass(c.id, currentUser!.id); 
+                    toast.success("Pendaftaran berhasil diajukan!"); 
+                  }}
                 >
-                  {enrolled ? "Sudah Terdaftar" : sisa === 0 ? "Kuota Penuh" : "Daftar Kelas"}
+                  {isPending ? "⏳ Pendaftaran Diajukan" : isConfirmed ? "✓ Sudah Terdaftar" : sisa === 0 ? "Kuota Penuh" : "Daftar Kelas"}
                 </Button>
               </div>
             );

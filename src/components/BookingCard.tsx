@@ -1,16 +1,17 @@
 import { Booking } from "@/types";
 import { useApp } from "@/context/AppContext";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, BookOpen } from "lucide-react";
+import { Calendar, Clock, BookOpen, ExternalLink, MessageSquare } from "lucide-react";
 import { StatusBadge } from "./StatusBadge";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 export function BookingCard({ booking, viewerRole }: { booking: Booking; viewerRole: "mahasiswa" | "tutor" }) {
-  const { tutors, mahasiswa, updateBookingStatus } = useApp();
+  const { tutors, mahasiswa, classes, updateBookingStatus } = useApp();
   const tutor = tutors.find(t => t.id === booking.tutorId);
   const mhs = mahasiswa.find(m => m.id === booking.mahasiswaId);
   const counterpart = viewerRole === "mahasiswa" ? tutor : mhs;
+  const targetClass = booking.classId ? classes.find(c => c.id === booking.classId) : null;
 
   return (
     <div className="animate-fade-in rounded-2xl border bg-card p-5 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elevated">
@@ -46,7 +47,21 @@ export function BookingCard({ booking, viewerRole }: { booking: Booking; viewerR
         {viewerRole === "mahasiswa" && (booking.status === "Pending" || booking.status === "Confirmed") && (
           <Button size="sm" variant="outline" onClick={() => { updateBookingStatus(booking.id, "Cancelled"); toast("Sesi dibatalkan"); }}>Batalkan</Button>
         )}
-        <Link to="/app/chat"><Button size="sm" variant="ghost">Chat</Button></Link>
+        <Link to={booking.classId ? `/app/chat/class_${booking.classId}` : `/app/chat/${viewerRole === "mahasiswa" ? `${booking.mahasiswaId}_${booking.tutorId}` : `${booking.mahasiswaId}_${booking.tutorId}`}`}><Button size="sm" variant="secondary" className="gap-2"><MessageSquare className="h-3.5 w-3.5"/>Diskusi</Button></Link>
+        {targetClass?.meetingLink && (
+          <a href={targetClass.meetingLink} target="_blank" rel="noreferrer">
+            <Button size="sm" variant="secondary" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
+              <ExternalLink className="h-3.5 w-3.5" /> Meeting
+            </Button>
+          </a>
+        )}
+        {targetClass?.materials && (
+          <a href={targetClass.materials} target="_blank" rel="noreferrer">
+            <Button size="sm" variant="secondary" className="gap-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400">
+              <ExternalLink className="h-3.5 w-3.5" /> Materi
+            </Button>
+          </a>
+        )}
       </div>
     </div>
   );

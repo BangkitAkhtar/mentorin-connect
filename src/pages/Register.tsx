@@ -8,24 +8,53 @@ import { useApp } from "@/context/AppContext";
 import { toast } from "sonner";
 import { GraduationCap, Users } from "lucide-react";
 
+import { authAPI } from "@/lib/api";
+
 export default function Register() {
   const nav = useNavigate();
-  const { register } = useApp();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [university, setUniversity] = useState("BINUS University");
   const [major, setMajor] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) { toast.error("Nama dan email wajib"); return; }
-    register({
-      role: "mahasiswa", name: name.trim(), email: email.trim(),
-      university, major,
-    } as any);
+    if (!name.trim() || !email.trim() || !password.trim()) { 
+      toast.error("Nama, email, dan password wajib diisi"); 
+      return; 
+    }
+    
+    setIsLoading(true);
+    const response = await authAPI.register(name.trim(), email.trim(), password.trim());
+    setIsLoading(false);
+
+    if (!response.success) {
+      toast.error("Gagal mendaftar", { description: response.message || "Email mungkin sudah digunakan" });
+      return;
+    }
+
+    // Format user agar cocok dengan struktur AppContext
+    const loggedUser = {
+      id: String(response.user.id),
+      role: "mahasiswa", // Default role untuk pendaftaran dari halaman ini
+      name: response.user.name,
+      email: response.user.email,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(response.user.name)}`,
+      university: university,
+      major: major
+    };
+
+    localStorage.setItem("mentorin_user_v1", JSON.stringify(loggedUser));
+    
     toast.success("Akun berhasil dibuat!");
-    nav("/app");
+    
+    // Reload agar AppContext membaca user baru
+    setTimeout(() => {
+      window.location.href = "/app";
+    }, 500);
   };
 
   return (
@@ -54,10 +83,13 @@ export default function Register() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div><Label htmlFor="n">Nama lengkap</Label><Input id="n" required value={name} onChange={e => setName(e.target.value)} /></div>
               <div><Label htmlFor="e">Email kampus</Label><Input id="e" type="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>
+              <div className="sm:col-span-2"><Label htmlFor="p">Password</Label><Input id="p" type="password" placeholder="Minimal 8 karakter" required value={password} onChange={e => setPassword(e.target.value)} /></div>
               <div><Label htmlFor="u">Universitas</Label><Input id="u" value={university} onChange={e => setUniversity(e.target.value)} /></div>
               <div><Label htmlFor="m">Jurusan</Label><Input id="m" placeholder="Computer Science" value={major} onChange={e => setMajor(e.target.value)} /></div>
             </div>
-            <Button type="submit" className="w-full">Daftar gratis</Button>
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Memproses..." : "Daftar gratis"}
+            </Button>
           </form>
 
           <div className="mt-6 rounded-2xl border bg-primary-soft/40 p-5">

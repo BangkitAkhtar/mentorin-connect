@@ -11,8 +11,9 @@ import { EmptyState } from "@/components/EmptyState";
 export default function TutorProfile() {
   const { id } = useParams();
   const nav = useNavigate();
-  const { tutors, classes, reviews, mahasiswa } = useApp();
-  const tutor = tutors.find(t => t.id === id);
+  const { tutors, admins, classes, reviews, mahasiswa } = useApp();
+  const allTutors = [...tutors, ...admins];
+  const tutor = allTutors.find(t => t.id === id);
   if (!tutor) return <div>Tutor tidak ditemukan</div>;
 
   const tutorClasses = classes.filter(c => c.tutorId === tutor.id && c.active);
@@ -27,9 +28,9 @@ export default function TutorProfile() {
             <h1 className="font-display text-2xl font-bold">{tutor.name}</h1>
             <p className="text-sm text-muted-foreground">{tutor.major} · {tutor.university}</p>
             <div className="mt-2"><RatingStars value={tutor.rating} showNumber count={tutor.reviewCount} /></div>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed">{tutor.bio}</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed">{tutor.bio || "Tidak ada biografi."}</p>
             <div className="mt-4 flex flex-wrap gap-1.5">
-              {tutor.subjects.map(s => <span key={s} className="rounded-full bg-primary-soft px-3 py-1 text-xs font-medium text-primary">{s}</span>)}
+              {(tutor.subjects || []).map(s => <span key={s} className="rounded-full bg-primary-soft px-3 py-1 text-xs font-medium text-primary">{s}</span>)}
             </div>
           </div>
           <div>
@@ -44,7 +45,7 @@ export default function TutorProfile() {
         <h2 className="mb-4 font-display text-xl font-semibold">Jadwal Ketersediaan</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {DAYS.map(d => {
-            const slots = tutor.availability[d] || [];
+            const slots = (tutor.availability || {})[d] || [];
             return (
               <div key={d} className="rounded-xl border bg-card p-4 shadow-card">
                 <div className="text-sm font-semibold">{d}</div>
