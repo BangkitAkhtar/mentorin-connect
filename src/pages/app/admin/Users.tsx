@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { DataTable } from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -46,7 +47,7 @@ function AddDialog({ onSave }: { onSave: (data: any) => void }) {
         <div className="space-y-4">
           <div><Label>Nama Lengkap</Label><Input value={name} onChange={e => setName(e.target.value)} /></div>
           <div><Label>Email</Label><Input type="email" value={email} onChange={e => setEmail(e.target.value)} /></div>
-          <div><Label>Password (Min. 8 karakter)</Label><Input type="password" value={password} onChange={e => setPassword(e.target.value)} /></div>
+          <div><Label>Password (Min. 8 karakter)</Label><PasswordInput value={password} onChange={e => setPassword(e.target.value)} /></div>
           <div>
             <Label>Role (Otoritas)</Label>
             <Select value={role} onValueChange={setRole}>
@@ -73,6 +74,7 @@ function EditDialog({ user, onSave }: { user: any; onSave: (id: string, data: an
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(user.role);
+  const [avatar, setAvatar] = useState(user.avatar);
   const [isSaving, setIsSaving] = useState(false);
 
   // Sync state if user prop changes
@@ -80,12 +82,13 @@ function EditDialog({ user, onSave }: { user: any; onSave: (id: string, data: an
     setName(user.name);
     setEmail(user.email);
     setRole(user.role);
+    setAvatar(user.avatar);
     setPassword(""); // Reset password field
   }, [user, open]);
 
   const handleSave = async () => {
     setIsSaving(true);
-    const data: any = { name, email, role };
+    const data: any = { name, email, role, avatar };
     if (password.trim().length > 0) {
       data.password = password;
     }
@@ -104,7 +107,7 @@ function EditDialog({ user, onSave }: { user: any; onSave: (id: string, data: an
           <div><Label>Email</Label><Input type="email" value={email} onChange={e => setEmail(e.target.value)} /></div>
           <div>
             <Label>Ubah Password <span className="text-muted-foreground font-normal">(Kosongkan jika tidak diubah)</span></Label>
-            <Input type="password" placeholder="Masukkan password baru" value={password} onChange={e => setPassword(e.target.value)} />
+            <PasswordInput placeholder="Masukkan password baru" value={password} onChange={e => setPassword(e.target.value)} />
           </div>
           <div>
             <Label>Role (Otoritas)</Label>
@@ -195,7 +198,11 @@ export default function AdminUsers() {
         columns={[
           { key: "u", header: "Pengguna", render: u => (
             <div className="flex items-center gap-3">
-              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`} alt="" className="h-9 w-9 rounded-full bg-muted" />
+              <img 
+                src={u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`} 
+                alt="" 
+                className="h-9 w-9 rounded-full bg-muted object-cover" 
+              />
               <div>
                 <div className="font-medium">{u.name}</div>
                 <div className="text-xs text-muted-foreground">{u.email}</div>

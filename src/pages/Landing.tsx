@@ -18,14 +18,19 @@ export default function Landing() {
   const mhsById = (id: string) => mahasiswa.find(m => m.id === id);
   const topReviews = [...reviews].sort((a, b) => b.rating - a.rating).slice(0, 6);
 
+  const handleBeranda = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         <div className="container flex h-16 items-center justify-between">
-          <Link to="/"><Logo /></Link>
+          <a href="/"><Logo /></a>
           <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <a href="/" className="story-link text-muted-foreground transition-colors hover:text-foreground">Beranda</a>
+            <a href="/" onClick={handleBeranda} className="story-link text-muted-foreground transition-colors hover:text-foreground">Beranda</a>
             <a href="#cara" className="story-link text-muted-foreground transition-colors hover:text-foreground">Cara Kerja</a>
             <a href="#tutor" className="story-link text-muted-foreground transition-colors hover:text-foreground">Tutor</a>
           </nav>

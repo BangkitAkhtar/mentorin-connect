@@ -118,7 +118,7 @@ export default function DashboardLayout() {
                 SASC BINUS Project
               </span>
               <NotificationBell />
-              <img src={currentUser.avatar} alt="" className="h-9 w-9 rounded-full border bg-muted" />
+              <img src={currentUser.avatar} alt="" className="h-9 w-9 rounded-full border bg-muted object-cover" />
             </div>
           </header>
 

@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 // Konfigurasi URL backend
-// Karena Anda pakai Laragon, ini bisa disesuaikan dengan virtual host Anda
-// Misalnya: http://mentorin-connect.test/backend/public/api atau http://localhost:8000/api
-const API_URL = 'http://localhost:8000/api'; 
-// Jika Anda menyalakan 'php artisan serve', ganti ke 'http://localhost:8000/api'
+// Gunakan environment variable VITE_API_URL untuk production
+// Default fallback ke localhost:8000 untuk development
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 // Setup Axios
 const api = axios.create({

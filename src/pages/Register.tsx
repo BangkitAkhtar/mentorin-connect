@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { useApp } from "@/context/AppContext";
 import { toast } from "sonner";
@@ -60,7 +61,7 @@ export default function Register() {
   return (
     <div className="grid min-h-screen md:grid-cols-2">
       <div className="hidden bg-gradient-hero p-12 md:flex md:flex-col md:justify-between">
-        <Link to="/"><Logo /></Link>
+        <a href="/"><Logo /></a>
         <div>
           <h1 className="font-display text-4xl font-bold leading-tight">Bergabung dengan komunitas belajar mahasiswa BINUS.</h1>
           <p className="mt-4 text-muted-foreground">Gratis selamanya. Belajar bareng, tumbuh bareng.</p>
@@ -69,7 +70,7 @@ export default function Register() {
       </div>
 
       <div className="flex flex-col justify-center p-8 md:p-12">
-        <div className="md:hidden mb-8"><Link to="/"><Logo /></Link></div>
+        <div className="md:hidden mb-8"><a href="/"><Logo /></a></div>
         <div className="mx-auto w-full max-w-lg">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-semibold text-primary">
             <Users className="h-3.5 w-3.5" /> Pendaftaran Mahasiswa
@@ -83,7 +84,7 @@ export default function Register() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div><Label htmlFor="n">Nama lengkap</Label><Input id="n" required value={name} onChange={e => setName(e.target.value)} /></div>
               <div><Label htmlFor="e">Email kampus</Label><Input id="e" type="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>
-              <div className="sm:col-span-2"><Label htmlFor="p">Password</Label><Input id="p" type="password" placeholder="Minimal 8 karakter" required value={password} onChange={e => setPassword(e.target.value)} /></div>
+              <div className="sm:col-span-2"><Label htmlFor="p">Password</Label><PasswordInput id="p" placeholder="Minimal 8 karakter" required value={password} onChange={e => setPassword(e.target.value)} /></div>
               <div><Label htmlFor="u">Universitas</Label><Input id="u" value={university} onChange={e => setUniversity(e.target.value)} /></div>
               <div><Label htmlFor="m">Jurusan</Label><Input id="m" placeholder="Computer Science" value={major} onChange={e => setMajor(e.target.value)} /></div>
             </div>

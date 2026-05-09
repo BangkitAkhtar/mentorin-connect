@@ -109,31 +109,45 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const allBookings = await bookingsAPI.getAll();
       const allReviews = await reviewsAPI.getAll();
       
-      setState(s => ({
-        ...s,
-        admins: allUsers.filter((u: any) => u.role === "admin").map((u: any) => ({ ...u, id: String(u.id) })),
-        tutors: allUsers.filter((u: any) => u.role === "tutor").map((u: any) => ({ ...u, id: String(u.id) })),
-        mahasiswa: allUsers.filter((u: any) => u.role === "mahasiswa").map((u: any) => ({ ...u, id: String(u.id) })),
-        classes: allClasses.map((c: any) => ({
-          ...c,
-          tutorId: String(c.user_id),
-          id: String(c.id),
-          enrolled: (c.enrolled || []).map((id: any) => String(id))
-        })),
-        bookings: allBookings.map((b: any) => ({
-          ...b,
-          id: String(b.id),
-          tutorId: String(b.tutor_id),
-          mahasiswaId: String(b.mahasiswa_id),
-          classId: b.class_id ? String(b.class_id) : null,
-        })),
-        reviews: allReviews.map((r: any) => ({
-          ...r,
-          id: String(r.id),
-          tutorId: String(r.tutor_id),
-          mahasiswaId: String(r.mahasiswa_id),
-        }))
-      }));
+      setState(s => {
+        // Sync currentUser dengan data terbaru dari backend (agar avatar & profil yang baru disimpan langsung tampil)
+        let updatedCurrentUser = s.currentUser;
+        if (s.currentUser) {
+          const freshUser = allUsers.find((u: any) => String(u.id) === s.currentUser!.id);
+          if (freshUser) {
+            updatedCurrentUser = { ...s.currentUser, ...freshUser, id: String(freshUser.id) } as AnyUser;
+            // Simpan ke localStorage agar persisten
+            localStorage.setItem('mentorin_user_v1', JSON.stringify(updatedCurrentUser));
+          }
+        }
+        
+        return {
+          ...s,
+          currentUser: updatedCurrentUser,
+          admins: allUsers.filter((u: any) => u.role === "admin").map((u: any) => ({ ...u, id: String(u.id) })),
+          tutors: allUsers.filter((u: any) => u.role === "tutor").map((u: any) => ({ ...u, id: String(u.id) })),
+          mahasiswa: allUsers.filter((u: any) => u.role === "mahasiswa").map((u: any) => ({ ...u, id: String(u.id) })),
+          classes: allClasses.map((c: any) => ({
+            ...c,
+            tutorId: String(c.user_id),
+            id: String(c.id),
+            enrolled: (c.enrolled || []).map((id: any) => String(id))
+          })),
+          bookings: allBookings.map((b: any) => ({
+            ...b,
+            id: String(b.id),
+            tutorId: String(b.tutor_id),
+            mahasiswaId: String(b.mahasiswa_id),
+            classId: b.class_id ? String(b.class_id) : null,
+          })),
+          reviews: allReviews.map((r: any) => ({
+            ...r,
+            id: String(r.id),
+            tutorId: String(r.tutor_id),
+            mahasiswaId: String(r.mahasiswa_id),
+          }))
+        };
+      });
     };
     
     fetchData();

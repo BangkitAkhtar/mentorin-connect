@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SUBJECTS, TutorProfile } from "@/types";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { authAPI } from "@/lib/api";
+import { authAPI, usersAPI } from "@/lib/api";
 
 export default function TutorProfilEdit() {
   const { currentUser, updateTutor } = useApp();
@@ -42,10 +42,35 @@ export default function TutorProfilEdit() {
     setIsUploading(false);
   };
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    toast.loading("Menyimpan profil...", { id: "save-profile" });
+    
+    // Simpan ke database backend
+    const res = await usersAPI.update(t.id, {
+      role: "tutor",
+      name,
+      university,
+      major,
+      bio,
+      subjects,
+      avatar,
+    });
+    
+    if (!res.success) {
+      toast.error(res.message || "Gagal menyimpan profil", { id: "save-profile" });
+      return;
+    }
+    
+    // Update state lokal React
     updateTutor({ id: t.id, name, university, major, bio, subjects, avatar });
-    toast.success("Profil tersimpan");
+    
+    // Update localStorage agar persisten di frontend
+    const updatedUser = { ...t, name, university, major, bio, subjects, avatar };
+    localStorage.setItem('mentorin_user_v1', JSON.stringify(updatedUser));
+    
+    toast.success("Profil berhasil disimpan", { id: "save-profile" });
   };
 
   return (

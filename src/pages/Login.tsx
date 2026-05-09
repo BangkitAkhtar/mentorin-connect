@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { useApp } from "@/context/AppContext";
 import { toast } from "sonner";
@@ -38,7 +39,7 @@ export default function Login() {
       role: role, // menggunakan role dari pilihan tab
       name: response.user.name,
       email: response.user.email,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(response.user.name)}`,
+      avatar: response.user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(response.user.name)}`,
       university: "BINUS University"
     };
 
@@ -55,7 +56,7 @@ export default function Login() {
   return (
     <div className="grid min-h-screen md:grid-cols-2">
       <div className="hidden bg-gradient-hero p-12 md:flex md:flex-col md:justify-between">
-        <Link to="/"><Logo /></Link>
+        <a href="/"><Logo /></a>
         <div>
           <h1 className="font-display text-4xl font-bold leading-tight">Selamat datang kembali di MentorIn 👋</h1>
           <p className="mt-4 text-muted-foreground">Lanjutkan perjalanan belajarmu bersama mentor sebaya BINUS.</p>
@@ -64,7 +65,7 @@ export default function Login() {
       </div>
 
       <div className="flex flex-col justify-center p-8 md:p-12">
-        <div className="md:hidden mb-8"><Link to="/"><Logo /></Link></div>
+        <div className="md:hidden mb-8"><a href="/"><Logo /></a></div>
         <div className="mx-auto w-full max-w-md">
           <h2 className="font-display text-2xl font-bold">Masuk ke akunmu</h2>
           <p className="mt-1 text-sm text-muted-foreground">Pilih role lalu masukkan email kampus.</p>
@@ -85,7 +86,7 @@ export default function Login() {
                 </div>
                 <div>
                   <Label htmlFor="pwd">Password</Label>
-                  <Input id="pwd" type="password" placeholder="••••••••" 
+                  <PasswordInput id="pwd" placeholder="••••••••" 
                     value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
                 <Button type="submit" disabled={isLoading} className="w-full hover-scale">
@@ -102,6 +103,20 @@ export default function Login() {
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Belum punya akun? <Link to="/register" className="font-semibold text-primary hover:underline">Daftar gratis</Link>
           </p>
+          
+          <div className="mt-4 flex flex-col items-center gap-3">
+            <div className="flex items-center gap-2 w-full max-w-[200px]">
+              <div className="h-px flex-1 bg-border"></div>
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium">atau</span>
+              <div className="h-px flex-1 bg-border"></div>
+            </div>
+            <Link to="/apply-tutor">
+              <Button variant="outline" className="gap-2 rounded-full px-8 hover-scale">
+                <GraduationCap className="h-4 w-4 text-primary" />
+                Daftar Tutor
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

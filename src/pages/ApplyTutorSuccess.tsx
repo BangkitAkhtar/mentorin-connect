@@ -8,7 +8,7 @@ export default function ApplyTutorSuccess() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="border-b">
-        <div className="container flex h-16 items-center"><Link to="/"><Logo /></Link></div>
+        <div className="container flex h-16 items-center"><a href="/"><Logo /></a></div>
       </header>
       <main className="container flex flex-1 items-center justify-center py-20">
         <div className="mx-auto max-w-lg rounded-3xl border bg-card p-10 text-center shadow-elevated animate-scale-in">

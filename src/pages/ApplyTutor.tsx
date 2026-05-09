@@ -46,7 +46,7 @@ export default function ApplyTutor() {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         <div className="container flex h-16 items-center justify-between">
-          <Link to="/"><Logo /></Link>
+          <a href="/"><Logo /></a>
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
             <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>

@@ -3,10 +3,11 @@ import { useApp } from "@/context/AppContext";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { MahasiswaProfile } from "@/types";
 import { toast } from "sonner";
-import { authAPI } from "@/lib/api";
+import { authAPI, usersAPI } from "@/lib/api";
 
 export default function MahasiswaProfilEdit() {
   const { currentUser, adminUpdateUser } = useApp();
@@ -40,22 +41,32 @@ export default function MahasiswaProfilEdit() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Call backend API to update password if provided
+    
+    toast.loading("Menyimpan profil...", { id: "update-profile" });
+    
+    // Siapkan data yang akan diupdate
+    const updateData: Record<string, any> = {
+      role: "mahasiswa",
+      name,
+      university,
+      major,
+      avatar,
+    };
+    
+    // Tambahkan password jika diisi
     if (password) {
-      toast.loading("Menyimpan password...", { id: "update-profile" });
-      const res = await usersAPI.update(m.id, {
-        role: "mahasiswa",
-        name,
-        password
-      });
-      if (!res.success) {
-        toast.error(res.message || "Gagal mengubah password", { id: "update-profile" });
-        return;
-      }
+      updateData.password = password;
     }
-
-    // Gunakan adminUpdateUser yang sudah ada di AppContext (karena ini hanya update state lokal sementara)
+    
+    // Simpan ke database backend
+    const res = await usersAPI.update(m.id, updateData);
+    
+    if (!res.success) {
+      toast.error(res.message || "Gagal menyimpan profil", { id: "update-profile" });
+      return;
+    }
+    
+    // Update state lokal React
     adminUpdateUser(m.id, "mahasiswa", { name, university, major, avatar });
     
     // Perbarui localstorage juga agar persisten di Frontend
@@ -87,7 +98,7 @@ export default function MahasiswaProfilEdit() {
           <div><Label>Jurusan</Label><Input value={major} onChange={e => setMajor(e.target.value)} /></div>
           <div className="sm:col-span-2">
             <Label>Password Baru (Opsional)</Label>
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Kosongkan jika tidak ingin mengubah password" />
+            <PasswordInput value={password} onChange={e => setPassword(e.target.value)} placeholder="Kosongkan jika tidak ingin mengubah password" />
           </div>
         </div>
         <Button type="submit">Simpan Profil</Button>
