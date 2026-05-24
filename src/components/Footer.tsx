@@ -19,11 +19,12 @@ export function Footer() {
           <div>
             <h4 className="mb-3 font-display text-sm font-semibold">Tim Pengembang — Kelompok 8</h4>
             <ul className="space-y-1.5 text-sm text-muted-foreground">
-              <li><span className="font-medium text-foreground">Fernaldy</span> — Product Owner</li>
-              <li><span className="font-medium text-foreground">Reynald</span> — SCRUM Master</li>
-              <li><span className="font-medium text-foreground">Bangkit</span> — Development Team</li>
-              <li><span className="font-medium text-foreground">Owen</span> — Development Team</li>
-              <li><span className="font-medium text-foreground">Jodie</span> — Development Team</li>
+              <li><span className="font-medium text-foreground">SASC</span> — Product Owner</li>
+              <li><span className="font-medium text-foreground">Reynald Aditya Putra Suyudi</span> — SCRUM Master</li>
+              <li><span className="font-medium text-foreground">Bangkit Akhtar Fahd</span> — Development Team</li>
+              <li><span className="font-medium text-foreground">Owen Elden</span> — Development Team</li>
+              <li><span className="font-medium text-foreground">Jodie Obadja</span> — Development Team</li>
+              <li><span className="font-medium text-foreground">Felice Fernaldy</span> — Development Team</li>
             </ul>
           </div>
 

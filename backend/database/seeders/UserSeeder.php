@@ -79,6 +79,32 @@ class UserSeeder extends Seeder
                     'Kamis' => ["13:00-15:00", "16:00-18:00"],
                 ],
             ],
+            [
+                'name' => 'Eka Sari',
+                'email' => 'eka@binus.ac.id',
+                'major' => 'Data Science',
+                'bio' => 'Data enthusiast yang suka ngulik Python dan visualisasi data. Mari belajar bareng!',
+                'subjects' => ["Python for Data Science", "Statistika Terapan"],
+                'rating' => 4.9,
+                'reviewCount' => 15,
+                'availability' => [
+                    'Senin' => ["10:00-12:00"],
+                    'Rabu' => ["14:00-16:00"],
+                ],
+            ],
+            [
+                'name' => 'Farah Amalia',
+                'email' => 'farah@binus.ac.id',
+                'major' => 'Cyber Security',
+                'bio' => 'Belajar keamanan siber itu seru! Saya siap bantu kamu paham dasar-dasar networking dan security.',
+                'subjects' => ["Jaringan Komputer", "Kriptografi"],
+                'rating' => 4.8,
+                'reviewCount' => 10,
+                'availability' => [
+                    'Selasa' => ["09:00-11:00"],
+                    'Kamis' => ["15:00-17:00"],
+                ],
+            ],
         ];
 
         foreach ($tutors as $t) {

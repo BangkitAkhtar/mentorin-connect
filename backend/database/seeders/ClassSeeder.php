@@ -16,6 +16,7 @@ class ClassSeeder extends Seeder
         $tutorBintang = \App\Models\User::where('email', 'bintang@binus.ac.id')->first();
         $tutorCitra = \App\Models\User::where('email', 'citra@binus.ac.id')->first();
         $tutorDimas = \App\Models\User::where('email', 'dimas@binus.ac.id')->first();
+        $tutorEka = \App\Models\User::where('email', 'eka@binus.ac.id')->first();
         $mhsDemo = \App\Models\User::where('email', 'demo@binus.ac.id')->first();
         $mhsRina = \App\Models\User::where('email', 'rina@binus.ac.id')->first();
 
@@ -77,6 +78,18 @@ class ClassSeeder extends Seeder
                 'startTime' => '16:00',
                 'endTime' => '18:00',
                 'capacity' => 8,
+                'enrolled' => [],
+                'active' => true,
+            ],
+            [
+                'user_id' => $tutorEka->id,
+                'title' => 'Pengenalan Python & NumPy',
+                'subject' => 'Python for Data Science',
+                'description' => 'Belajar dasar Python dan manipulasi array dengan NumPy.',
+                'day' => 'Senin',
+                'startTime' => '10:00',
+                'endTime' => '12:00',
+                'capacity' => 10,
                 'enrolled' => [],
                 'active' => true,
             ],
